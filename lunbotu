@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+</head>
+<style>
+    *{
+        margin:0;
+        padding: 0;
+    }
+    img{
+        vertical-align: top;
+    }
+    #box{
+        width: 400px;
+        height: 400px;
+        border:1px solid red;
+        margin:100px auto;
+        position: relative;
+        overflow: hidden;
+    }
+    #inner{
+        width:2400px;
+        height:400px;
+        position: absolute;
+        left:0;
+        top:0;
+        transition: all 0.7s;
+    }
+    #inner img{
+        width:400px;
+        height:400px;
+        float: left;
+
+    }
+    li{
+        list-style:none;
+    }
+    #btns{
+        position: absolute;
+        left:40%;
+        bottom: 20px;
+    }
+    #btns li{
+        width:10px;
+        height:10px;
+        border:1px solid black;
+        float: left;
+        border-radius: 50%;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+    .active{
+        background-color: aqua;
+    }
+    #left,#right{
+        width: 30px;
+        height: 60px;
+        background-color: #CCCCCC;
+        position: absolute;
+        top:50%;
+        margin-top: -30px;
+        font-size: 30px;
+        color: white;
+        text-align: center;
+        line-height: 60px;
+        cursor: pointer;
+    }
+    #left{
+        left:0;
+    }
+    #right{
+        right:0;
+    }
+</style>
+<body>
+<div id="box">
+    <div id="inner">
+        <img src="img/11.jpg" alt="">
+        <img src="img/9.jpg" alt="">
+        <img src="img/10.jpg" alt="">
+        <img src="img/7.jpg" alt="">
+        <img src="img/8.jpg" alt="">
+        <img src="img/0.jpg" alt="">
+    </div>
+    <ul id="btns">
+        <li class="active"></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    <div id="left"><</div>
+    <div id="right">></div>
+</div>
+<script>
+    var box=document.getElementById("box");
+    var inner=document.getElementById("inner");
+    var imgs=inner.getElementsByTagName("img");
+    var lis=document.getElementById("btns").getElementsByTagName("li");
+    var left=document.getElementById("left");
+    var right=document.getElementById("right");
+
+
+    function myFunction() {
+        for(var i=0;i<imgs.length;i++){
+            lis[i].className='';
+        }
+        lis[index].className='active';
+        inner.style.left=-imgs[0].offsetWidth*index+'px';
+    }
+    for(var i=0;i<lis.length;i++){
+        lis[i].index=i;
+        lis[i].onclick=function () {
+            index=this.index;
+            myFunction();
+        }
+    }
+
+    var index=0;
+    right.onclick=function () {
+        index++;
+        if(index>lis.length-1){
+            index=0;
+        }
+        myFunction();
+    }
+    left.onclick=function () {
+        index--;
+        if(index<0){
+            index=lis.length-1;
+        }
+        myFunction();
+    }
+
+//鼠标移入暂停，移出自动播放
+    var timer=null;
+    function play() {
+        timer=setInterval(function () {
+            right.onclick();
+        },2000)
+    }
+    play();
+    function stop() {
+        clearInterval(timer);
+    }
+    box.onmouseover=stop;
+    box.onmouseout=play;
+</script>
+</body>
+</html>
