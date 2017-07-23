@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>字对颜色游戏</title>
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	#box{
+		width: 400px;
+		height: 600px;
+		border:1px solid black;
+		margin: 100px auto;
+		position: relative;
+	}
+	#header{
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+	#header span{
+		font-size: 30px;
+	}
+	#header span:nth-child(3){
+		margin-left: 100px;
+	}
+	#inner1{
+		position: absolute;
+		left: 50%;
+		font-size: 150px;
+		margin-left: -75px;
+		top: 80px;
+		color: green;
+	}
+	.inner2{
+		position: absolute;
+		top: 330px;
+		text-align: center;
+		font-size: 20px;
+		color: red;
+	}
+	#footer{
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 400px;
+		height: 100px;
+	}
+	li{
+		list-style: none;
+		font-size: 70px;
+		width: 80px;
+		height: 100px;
+		position: absolute;
+		top: 0;
+		line-height: 100px;
+		text-align: center;
+		cursor: pointer;
+	}
+	li:nth-child(1){
+		left: 0;
+		color: yellow;
+	}
+	li:nth-child(2){
+		left: 80px;
+		color: blue;
+	}
+	li:nth-child(3){
+		left: 160px;
+		color: green;
+	}
+	li:nth-child(4){
+		right: 80px;
+		color: black;
+	}
+	li:nth-child(5){
+		right: 0;
+		color: red;
+	}
+	#box1{
+		width: 400px;
+		height: 600px;
+		line-height: 600px;
+		text-align: center;
+		background-color: rgba(0,0,0,0.3);
+		font-size: 50px;
+		position: absolute;
+		left: 50%;
+		margin-left: -200px;
+		top: 101px;
+		display: none;
+		color: red;
+	}
+</style>
+<body>
+	<div id="box">
+		<div id="header">
+			<span>剩余时间 : </span>
+			<span>20</span>
+			<span>完成 : </span>
+			<span>0</span>
+		</div>
+		<div id="inner1">红</div>
+		<div class="inner2">根据上面的字的颜色从下面选择正确的字，选择正确自动开始，每次有20s的反应时间</div>
+		<ul id="footer">
+			<li>红</li>
+			<li>黄</li>
+			<li>蓝</li>
+			<li>绿</li>
+			<li>黑</li>
+		</ul>
+	</div>
+	<div id="box1"></div>
+	<script>
+		var spans=document.getElementById("header").getElementsByTagName("span");
+		var inner1=document.getElementById("inner1");
+		var lis=document.getElementById("footer").getElementsByTagName("li");
+		var box1=document.getElementById("box1");
+
+
+		// 1、创建随机数
+		function rand(min,max){
+			return parseInt(Math.random()*(max-min)+min);
+		}
+
+		// 2、随机数组
+		// 3、定义一个空数组存放随机数
+		var arr=[];
+		// 10、将这个随机数进行封装，以便为后面的选字或颜色而做准备
+		function myFunction(){
+			// 11、需要将每次执行以后存储到数组里面的元素清空，以便重新添加
+			arr=[];
+			// 4、将随机数存放到数组里面
+			while(arr.length<lis.length){
+				
+				// 5、将随机数放到变量a中
+				var a=rand(0,5);
+				// 7、去重
+				// 8、定义一个变量，为去重做准备
+				var bol=true;
+				
+				for(var i=0;i<arr.length;i++){
+					// 9、将即将加到数组里面的元素与数组里面已经存在的元素进行比较，若即将加到数组里面的元素与数组里的元素相等，则将bol赋值为false且退出循环，若一直为true则将值加到数组里
+					if(a==arr[i]){
+						bol=false;
+						break;
+					}
+				}
+				if(bol){
+					// 6、将a添加到数组arr中
+					arr.push(a);
+				}
+			}
+			// 19、返回数组，以便之后的调用
+			return arr;
+		}
+
+		// 12、定义一个数组存放颜色
+		var arrColor=["red","yellow","blue","green","black"];
+		// 13、定义一个变量存放字
+		var arrFont=["红","黄","蓝","绿","黑"];
+
+		// 大字的随机颜色与字
+		// 26、定义一个变量，存放大字的颜色
+		var bigColors=null;
+		// 16、将大字进行封装，以便之后定时器里运用
+		function bigText(){
+			// 14、随机选取大字的字和颜色的下标
+			bigColors=rand(0,5);
+			var bigFont=rand(0,5);
+			// 15、将下标赋给颜色和字的数组，以便随机获得大字的颜色和改变大字的字
+			inner1.style.color=arrColor[bigColors];
+			inner1.innerHTML=arrFont[bigFont];
+		}
+		bigText();
+
+
+		// 17、五个小字的随机获取颜色与相应位置上的字
+		// 20、封装我们的小字，以便定时器及其它运用
+		function smallText(){
+			// 18、在小字里面我们是要随机获取五个位置上随机的字以及下边，这就需要我们利用上面封装的数组来获取
+			var smallColors=myFunction();
+			var smallFont=myFunction();
+			// console.log(smallFont)
+			// 19、分别给每个位置上随机附上字和颜色，这都需要利用他们的下标
+			for(var i=0;i<lis.length;i++){
+				lis[i].innerHTML=arrFont[smallFont[i]];
+				lis[i].style.color=arrColor[smallColors[i]];
+				// 24、给每个li添加一个自定义属性，以便获取到字的下标
+				lis[i].index=smallFont[i];
+
+				
+			}	
+		}
+		smallText();
+
+		// 定义一个变量是我们能不断执行
+		var num=0;
+		// 21、看大字的颜色点击选取相应的小字
+		for(var i=0;i<lis.length;i++){
+			// 22、获取小字的字的下标与大字的颜色下标对比，若相等，进行下一次，否则gameOver
+			// 23、但是我们会发现小字任一个对应的坐标我们获取不到，因为for每次都是直接执行完，需要我们利用上面的小字的封装函数里面的某个对应位置字的下标，即需要我们的自定义属性
+			lis[i].onclick=function(){
+				// 25、随机的小字字的下标与大字颜色对比
+				if(this.index==bigColors){
+					smallText();
+					bigText();
+					// 26、使点击能一直执行下去
+					num++;
+					// 27、将完成的次数展示到浏览器的完成上去
+					spans[3].innerHTML=num;
+
+					// 36、在每次执行之前，都先要清除定时器，以免定时器发生错误
+					clearInterval(timer);
+
+					// 34、调用定时器
+					sysj();
+					// 35、下次执行重新从20开始，并将其实赋给页面上的剩余时间
+					a=20;
+					spans[1].innerHTML=a;
+				}else if(this.index!=bigColors&&num<20){
+					box1.style.display="block";
+					box1.innerHTML="Game Over";
+				}
+				// 28、如果执行的次数大于20次，则祝福你
+				if(num>=20){
+					box1.style.display="block";
+					box1.innerHTML="Congratulation!";
+				}
+			}
+
+		}
+		
+		// 29、倒计时
+		// 30、定义一个变量赋值为20，为了等20s
+		var a=20;
+		// 31、定义一个变量给定时器
+		var timer=null;
+		// 33、封装定时器
+		function sysj(){
+			// 32、定时器
+			timer=setInterval(function(){
+				a--;
+				if(a<0){
+					a=0;
+					box1.style.display="block";
+					box1.innerHTML="Game Over";
+				}else{
+					spans[1].innerHTML=a;
+				}
+			},1000);
+		}
+		
+		
+	</script>
+</body>
+</html>
